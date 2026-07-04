@@ -1,6 +1,6 @@
 # Vicinity
 
-A web app for finding and supporting local businesses in your area. Businesses can list themselves, post deals, and manage reviews. Users can search, save favorites, leave reviews, and message business owners.
+A web app for finding and supporting local businesses in your area. Businesses can list themselves, post deals, and manage reviews. Users can search, save favorites, leave reviews, and message business owners
 
 ## What It Does
 

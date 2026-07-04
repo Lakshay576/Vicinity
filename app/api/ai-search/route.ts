@@ -1,5 +1,5 @@
 // API route that performs AI-powered business search using Groq with smart keyword pre-filtering.
-// Accepts a query and business list, returns matched businesses with full details.
+// Accepts a query and business list, returns matched businesses with full details
 
 import { NextRequest, NextResponse } from 'next/server'
 

@@ -1,7 +1,7 @@
 'use client'
 
 
-// Public business detail page showing profile info, reviews, deals, and a messaging CTA.
+// Public business detail page showing profile info, reviews, deals, and a messaging CTA
 // Fetches business data and reviews from Supabase and renders an interactive profile layout.
 
 import React, { useState, useEffect, useMemo, useRef } from 'react'

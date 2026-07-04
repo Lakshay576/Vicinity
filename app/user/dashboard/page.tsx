@@ -2,7 +2,7 @@
 
 
 // User dashboard (browse) page for discovering and filtering local businesses.
-// Features category-based filtering, AI search, grid/list views, and favorites management.
+// Features category-based filtering, AI search, grid/list views, and favorites management
 
 import React, { useState, useEffect, useMemo, useRef } from 'react'
 import { useRouter } from 'next/navigation'

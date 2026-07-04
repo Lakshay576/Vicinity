@@ -2,7 +2,7 @@
 
 
 // Floating AI chat widget that provides context-aware assistance to users and business owners.
-// Adapts greeting and responses based on user type (guest, community, business) using the chat API.
+// Adapts greeting and responses based on user type (guest, community, business) using the chat API
 
 import { useState, useRef, useEffect } from 'react'
 import { FaRobot, FaTimes, FaPaperPlane, FaSpinner } from 'react-icons/fa'

@@ -1,5 +1,5 @@
 // Provides global authentication state (session, user, userType) via React context.
-// Listens to Supabase auth events and exposes login, logout, and Google OAuth helpers.
+// Listens to Supabase auth events and exposes login, logout, and Google OAuth helpers
 
 'use client'
 

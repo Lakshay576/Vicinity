@@ -22,9 +22,10 @@ import {
   FaCheckCircle,
   FaHeart,
   FaTag,
-  FaEnvelope,FaTwitter, FaInstagram, FaLinkedin
+  FaEnvelope, FaTwitter, FaInstagram, FaLinkedin
 } from "react-icons/fa";
 import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 import { useTheme } from "../context/ThemeContext";
 import { BackgroundBeamsWithCollision } from "@/components/ui/beams-collision";
@@ -51,27 +52,28 @@ const fadeUp = {
 };
 
 
+// Renders an animated glowing background blob that adapts to dark/light theme
 function SectionGlow({ position = "left" }) {
   const { isDark } = useTheme();
 
   return (
     <motion.div
+      // Slow organic float animation for visual background depth
       animate={{
         scale: [1, 1.06, 1],
         opacity: [0.1, 0.22, 0.1],
         x: [0, position === "left" ? 20 : -20, 0],
         transition: { duration: 10, repeat: Infinity, ease: "easeInOut" },
       }}
-      className={`absolute ${
-        position === "left" ? "-left-32 top-10" : "-right-32 top-16"
-      } h-[360px] w-[360px] rounded-full blur-[140px] ${
-        isDark ? "bg-blue-500/10" : "bg-blue-100/70"
-      }`}
+      className={`absolute ${position === "left" ? "-left-32 top-10" : "-right-32 top-16"
+        } h-[360px] w-[360px] rounded-full blur-[140px] ${isDark ? "bg-blue-500/10" : "bg-blue-100/70"
+        }`}
     />
   );
 }
 
 
+// Reusable section header with fade-in animation and optional description text
 function SectionHeader({
   title,
   text,
@@ -104,6 +106,7 @@ function SectionHeader({
 }
 
 
+// Renders a hoverable feature card with responsive glassmorphism styles
 function FeatureCard({ icon, title, text, badge, delay = 0 }) {
   return (
     <motion.div
@@ -112,6 +115,7 @@ function FeatureCard({ icon, title, text, badge, delay = 0 }) {
       viewport={{ once: true, margin: "-40px" }}
       custom={delay}
       variants={fadeUp}
+      // Spring lift-on-hover transition for interactive tactile feedback
       whileHover={{ y: -10, transition: { duration: 0.3 } }}
       className="group relative overflow-hidden rounded-[28px] border border-blue-500/10 bg-white/70 p-7 shadow-[0_8px_32px_rgba(15,23,42,0.04)] backdrop-blur-xl transition-all duration-300 hover:border-blue-500/25 hover:shadow-[0_24px_64px_rgba(59,130,246,0.10)] dark:border-white/8 dark:bg-white/[0.03] dark:hover:border-white/15"
     >
@@ -141,7 +145,7 @@ function FeatureCard({ icon, title, text, badge, delay = 0 }) {
   );
 }
 
-function HeroSection({ isAdhd }: { isAdhd: boolean }) {
+function RotatingWord({ isAdhd }: { isAdhd: boolean }) {
   const words = ["spas", "cafes", "shops", "salons", "gyms"];
   const [currentWord, setCurrentWord] = useState(0);
 
@@ -152,6 +156,34 @@ function HeroSection({ isAdhd }: { isAdhd: boolean }) {
     }, 2400);
     return () => clearInterval(interval);
   }, [isAdhd]);
+
+  return (
+    <span className="relative inline-block min-w-[1.15em]">
+      {/* AnimatePresence mode="wait" ensures the exit transition completes before the next word enters */}
+      <AnimatePresence mode="wait">
+        <motion.span
+          key={words[currentWord]}
+          initial={{ opacity: 0, y: 18, filter: "blur(6px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          exit={{ opacity: 0, y: -18, filter: "blur(6px)" }}
+          transition={{ duration: 0.4 }}
+          className="inline-block bg-white bg-clip-text text-transparent drop-shadow-md"
+        >
+          {words[currentWord]}
+        </motion.span>
+      </AnimatePresence>
+      {/* Decorative underline with subtle scale pulse */}
+      <motion.div
+        animate={{ scaleX: [0.75, 1, 0.75], opacity: [0.5, 1, 0.5] }}
+        transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+        className="absolute -bottom-2 left-0 right-0 h-[4px] rounded-full bg-white/80"
+      />
+    </span>
+  );
+}
+
+// Landing page hero section containing cycling category names and animated Lottie graphics
+function HeroSection({ isAdhd }: { isAdhd: boolean }) {
 
   return (
     <section className="relative overflow-hidden px-6 pb-20 pt-32 md:pb-24 md:pt-40 h-screen max-h-screen flex flex-col justify-center">
@@ -174,25 +206,7 @@ function HeroSection({ isAdhd }: { isAdhd: boolean }) {
             className="font-[var(--font-outfit)] text-[clamp(2.4rem,4.5vw,4rem)] font-bold leading-[1.1] tracking-tight text-white drop-shadow-sm dark:text-white"
           >
             Find the best local{" "}
-            <span className="relative inline-block min-w-[1.15em]">
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={words[currentWord]}
-                  initial={{ opacity: 0, y: 18, filter: "blur(6px)" }}
-                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  exit={{ opacity: 0, y: -18, filter: "blur(6px)" }}
-                  transition={{ duration: 0.4 }}
-                  className="inline-block bg-white bg-clip-text text-transparent drop-shadow-md"
-                >
-                  {words[currentWord]}
-                </motion.span>
-              </AnimatePresence>
-              <motion.div
-                animate={{ scaleX: [0.75, 1, 0.75], opacity: [0.5, 1, 0.5] }}
-                transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -bottom-2 left-0 right-0 h-[4px] rounded-full bg-white/80"
-              />
-            </span>{" "}
+            <RotatingWord isAdhd={isAdhd} />{" "}
             around you
           </motion.h1>
 
@@ -261,6 +275,7 @@ function HeroSection({ isAdhd }: { isAdhd: boolean }) {
         >
           <div className="overflow-hidden rounded-[24px] border border-white/30 bg-white/75 shadow-[0_32px_64px_rgba(0,0,0,0.2)] backdrop-blur-xl dark:border-white/10 dark:bg-white/[0.06] dark:shadow-[0_32px_64px_rgba(0,0,0,0.5)]">
 
+            {/* Simulated macOS-style window controller dots */}
             <div className="flex items-center gap-4 border-b border-white/30 bg-white/50 px-5 py-3 rounded-t-[24px] dark:border-white/10 dark:bg-white/[0.04]">
               <div className="flex items-center gap-2">
                 <span className="h-3 w-3 rounded-full bg-red-400" />
@@ -288,9 +303,9 @@ function HeroSection({ isAdhd }: { isAdhd: boolean }) {
 
                 <div className="mt-4 space-y-2.5">
                   {[
-                    { name: "Harbor Café",     meta: "Coffee • 4.9 • 0.8 mi",    deal: "20% OFF" },
-                    { name: "Northline Books", meta: "Bookstore • 4.8 • 1.5 mi", deal: "BOGO"    },
-                    { name: "Summit Fitness",  meta: "Gym • 4.7 • 1.2 mi",       deal: null      },
+                    { name: "Harbor Café", meta: "Coffee • 4.9 • 0.8 mi", deal: "20% OFF" },
+                    { name: "Northline Books", meta: "Bookstore • 4.8 • 1.5 mi", deal: "BOGO" },
+                    { name: "Summit Fitness", meta: "Gym • 4.7 • 1.2 mi", deal: null },
                   ].map((item, i) => (
                     <motion.div
                       key={item.name}
@@ -323,6 +338,7 @@ function HeroSection({ isAdhd }: { isAdhd: boolean }) {
 
               <div className="border-l border-slate-100 p-4 flex items-center justify-center bg-slate-50/50 dark:border-white/8 dark:bg-white/[0.02] dark:border-blue-500/30">
                 <div className="relative rounded-[18px] border border-blue-100 dark:border-blue-500/30 bg-white shadow-sm w-full dark:border-white/8 dark:bg-[#0f1b2d]">
+                  {/* Glare shimmer animation to emphasize interactive mock component */}
                   <motion.div
                     animate={{ x: ["-130%", "130%"] }}
                     transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
@@ -349,6 +365,7 @@ function HeroSection({ isAdhd }: { isAdhd: boolean }) {
   );
 }
 
+// Dashboard mock showcase panel displaying a simulated search result list
 function ShowcasePanel() {
   const { isDark } = useTheme();
 
@@ -370,6 +387,7 @@ function ShowcasePanel() {
       />
 
       <div className="overflow-hidden rounded-[32px] border border-blue-500/12 bg-white/85 shadow-[0_40px_100px_rgba(15,23,42,0.08)] backdrop-blur-2xl dark:border-white/8 dark:bg-white/[0.03] dark:shadow-[0_40px_100px_rgba(0,0,0,0.40)]">
+        {/* Mock window control buttons and address bar */}
         <div className="flex items-center gap-3 border-b border-blue-500/8 px-6 py-3.5 dark:border-white/8">
           <div className="flex items-center gap-1.5">
             <span className="h-2.5 w-2.5 rounded-full bg-red-400/80" />
@@ -462,11 +480,10 @@ function ShowcasePanel() {
 
           <div className="border-t border-blue-500/8 p-6 dark:border-white/8 lg:border-l lg:border-t-0 lg:p-8">
             <div
-              className={`relative overflow-hidden rounded-[24px] p-5 ${
-                isDark
+              className={`relative overflow-hidden rounded-[24px] p-5 ${isDark
                   ? "border border-white/8 bg-[#0a1628]"
                   : "border border-blue-500/8 bg-slate-50/80"
-              }`}
+                }`}
             >
               <motion.div
                 animate={{
@@ -496,6 +513,7 @@ function ShowcasePanel() {
 }
 
 
+// Grid section showcasing the platform's core functional features
 function FeaturesSection() {
   const features = [
     {
@@ -542,13 +560,13 @@ function FeaturesSection() {
           className="mb-12 flex flex-col gap-8 md:flex-row md:items-end md:justify-between"
         >
           <div className="max-w-xl">
-            
+
             <h2 className="font-[var(--font-outfit)] text-3xl font-semibold leading-[1.1] tracking-[-0.06em] text-slate-900 dark:text-white md:text-5xl">
               Everything you need<br className="hidden md:block" /> to explore local.
             </h2>
           </div>
 
-          
+
         </motion.div>
 
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
@@ -584,7 +602,7 @@ function FeaturesSection() {
                 {f.text}
               </p>
 
-            
+
               {f.badge && (
                 <div className="relative z-10 mt-5 inline-flex items-center gap-1.5 rounded-full border border-blue-500/15 bg-blue-500/6 px-3 py-1 font-[var(--font-outfit)] text-[11px] font-semibold tracking-[0.04em] text-blue-600 dark:text-blue-300">
                   <span className="h-1 w-1 rounded-full bg-blue-400" />
@@ -601,6 +619,7 @@ function FeaturesSection() {
 }
 
 
+// Section explaining the user discovery journey in three compact steps
 function HowItWorksSection() {
   const steps = [
     {
@@ -628,31 +647,32 @@ function HowItWorksSection() {
       key={step.number}
       initial={{ opacity: 0, y: 32 }}
       whileInView={{ opacity: 1, y: 0 }}
+      // Triggers viewport reveal only when step card intersects with screen scroll frame
       viewport={{ once: true, margin: "-40px" }}
       transition={{ duration: 0.55, delay: i * 0.12, ease: "easeOut" }}
       className="group relative flex flex-col overflow-hidden rounded-[28px] border border-blue-500/10 bg-white/70 backdrop-blur-xl transition-all duration-300 hover:border-blue-500/22 hover:shadow-[0_24px_56px_rgba(59,130,246,0.10)] dark:border-white/8 dark:bg-white/[0.03]"
     >
-      <div className="relative flex-1 px-7 pb-5 pt-7">
+      <div className="relative flex-1 px-5 pb-3 pt-5">
         <div className="absolute -right-16 -top-16 h-40 w-40 rounded-full bg-blue-400/0 blur-[50px] transition-all duration-500 group-hover:bg-blue-400/12" />
 
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
-            <span className="mb-2 block font-[var(--font-outfit)] text-3xl font-bold leading-none tracking-tight text-blue-500/15 dark:text-blue-400/12">
+            <span className="mb-1 block font-[var(--font-outfit)] text-2xl font-bold leading-none tracking-tight text-blue-600 dark:text-blue-300">
               {step.number}
             </span>
-            <h3 className="font-[var(--font-outfit)] text-[19px] whitespace-nowrap font-semibold tracking-[-0.03em] text-slate-900 dark:text-white">
+            <h3 className="font-[var(--font-outfit)] text-[17px] whitespace-nowrap font-semibold tracking-[-0.03em] text-slate-900 dark:text-white">
               {step.title}
             </h3>
           </div>
-            <p className="mt-2 text-[13.5px] leading-[1.8] text-slate-500 dark:text-slate-400">
-              {step.text}
-            </p>
+          <p className="mt-1 text-[13px] leading-[1.6] text-slate-500 dark:text-slate-400">
+            {step.text}
+          </p>
 
-         
+
         </div>
       </div>
 
-      <div className="relative h-56 w-full shrink-0 overflow-hidden sm:h-64 mt-auto">
+      <div className="relative h-48 w-full shrink-0 overflow-hidden sm:h-52 mt-auto">
         <motion.img
           src={step.img}
           alt={step.title}
@@ -664,12 +684,12 @@ function HowItWorksSection() {
   );
 
   return (
-    <section id="how-it-works" className="relative px-6 pb-24 md:pb-32">
+    <section id="how-it-works" className="relative px-6 pb-16 md:pb-20">
 
       <div className="relative z-10 mx-auto max-w-6xl">
-        
-        <div className="grid gap-12 md:grid-cols-2 md:gap-16 lg:gap-24 items-start mb-12 md:mb-16">
-          
+
+        <div className="grid gap-8 md:grid-cols-2 md:gap-10 lg:gap-16 items-start mb-8 md:mb-10">
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -684,7 +704,7 @@ function HowItWorksSection() {
               </span>
             </div>
 
-            <h2 className="font-[var(--font-outfit)] text-4xl font-semibold leading-[1.1] tracking-[-0.06em] text-slate-900 dark:text-white md:text-5xl lg:text-6xl">
+            <h2 className="font-[var(--font-outfit)] text-3xl font-semibold leading-[1.1] tracking-[-0.06em] text-slate-900 dark:text-white md:text-4xl lg:text-5xl">
               From search to visit in three simple steps.
             </h2>
 
@@ -708,12 +728,12 @@ function HowItWorksSection() {
           </div>
         </div>
 
-        <div className="grid gap-12 md:grid-cols-2 md:gap-16 lg:gap-24">
+        <div className="grid gap-8 md:grid-cols-2 md:gap-10 lg:gap-16">
           <div className="flex flex-col h-full">
-             {renderStepCard(steps[1], 1)}
+            {renderStepCard(steps[1], 1)}
           </div>
           <div className="flex flex-col h-full">
-             {renderStepCard(steps[2], 2)}
+            {renderStepCard(steps[2], 2)}
           </div>
         </div>
 
@@ -723,13 +743,14 @@ function HowItWorksSection() {
 }
 
 
+// Split layout targeting personal users vs commercial business owners
 function AudienceSection({ isAdhd }: { isAdhd: boolean }) {
   const cardClass =
     "group relative flex flex-col items-center text-center overflow-hidden rounded-[32px] border bg-white/80 pt-12 px-6 shadow-[0_8px_32px_rgba(15,23,42,0.04)] backdrop-blur-xl dark:bg-white/[0.03] transition-all duration-300";
 
   return (
     <section className="relative px-6 pb-24 md:pb-32">
-      
+
       <div className="relative z-10 mx-auto max-w-6xl">
         <div className="mb-10 md:mb-14 text-center">
           <h2 className="font-[var(--font-outfit)] text-3xl font-semibold tracking-tight text-slate-900 dark:text-white md:text-5xl">
@@ -749,7 +770,7 @@ function AudienceSection({ isAdhd }: { isAdhd: boolean }) {
             <div className="absolute -right-16 -top-16 h-40 w-40 rounded-full bg-blue-400/0 blur-[50px] transition-all duration-500 group-hover:bg-blue-400/15" />
 
             <h3 className="relative z-10 font-[var(--font-outfit)] text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
-              For Personal
+              For Community
             </h3>
             <p className="relative z-10 mx-auto mt-4 max-w-sm text-[15px] leading-relaxed text-slate-500 dark:text-slate-400">
               Discover nearby restaurants, shops, and services. Read real reviews, find deals, and save your favorite spots.
@@ -830,16 +851,16 @@ function AudienceSection({ isAdhd }: { isAdhd: boolean }) {
               ))}
             </div>
 
-         <div className="relative flex w-full items-center justify-center  pb-4">
-            <div className="h-[160px] w-[160px] md:h-[180px] md:w-[180px] scale-[1.2] md:scale-[1.7] transform-gpu">
-              <DotLottieReact
-                key={isAdhd ? "lottie-aud2-paused" : "lottie-aud2-playing"}
-                src="https://lottie.host/a787e51b-7df0-41d2-8d23-a85c1c1a9576/nZxquDKzQ5.lottie"
-                loop
-                autoplay={!isAdhd}
-              />
+            <div className="relative flex w-full items-center justify-center  pb-4">
+              <div className="h-[160px] w-[160px] md:h-[180px] md:w-[180px] scale-[1.2] md:scale-[1.7] transform-gpu">
+                <DotLottieReact
+                  key={isAdhd ? "lottie-aud2-paused" : "lottie-aud2-playing"}
+                  src="https://lottie.host/a787e51b-7df0-41d2-8d23-a85c1c1a9576/nZxquDKzQ5.lottie"
+                  loop
+                  autoplay={!isAdhd}
+                />
+              </div>
             </div>
-          </div>
           </motion.div>
         </div>
       </div>
@@ -848,6 +869,7 @@ function AudienceSection({ isAdhd }: { isAdhd: boolean }) {
 }
 
 
+// Frequently Asked Questions accordion widget with animated toggle states
 function FAQSection() {
   const [openIndex, setOpenIndex] = useState(0);
   const faqs = [
@@ -956,19 +978,18 @@ function FAQSection() {
                   viewport={{ once: true }}
                   custom={i * 0.06}
                   variants={fadeUp}
-                  className={`overflow-hidden rounded-[20px] border backdrop-blur-xl transition-all duration-300 ${
-                    isOpen
+                  className={`overflow-hidden rounded-[20px] border backdrop-blur-xl transition-all duration-300 ${isOpen
                       ? "border-blue-500/20 bg-white/90 shadow-[0_8px_32px_rgba(59,130,246,0.08)] dark:border-blue-500/15 dark:bg-white/[0.05] dark:shadow-[0_8px_32px_rgba(59,130,246,0.06)]"
                       : "border-blue-500/6 bg-white/70 shadow-[0_2px_12px_rgba(15,23,42,0.02)] hover:border-blue-500/15 dark:border-white/6 dark:bg-white/[0.02] dark:hover:border-white/12"
-                  }`}
+                    }`}
                 >
+                  {/* Accordion index header button that toggles local openIndex state */}
                   <button onClick={() => setOpenIndex(isOpen ? null : i)} className="flex w-full items-center gap-4 px-6 py-5 text-left">
                     <span
-                      className={`flex h-8 w-8 items-center justify-center rounded-xl text-xs font-bold font-[var(--font-outfit)] shrink-0 transition-all duration-300 ${
-                        isOpen
+                      className={`flex h-8 w-8 items-center justify-center rounded-xl text-xs font-bold font-[var(--font-outfit)] shrink-0 transition-all duration-300 ${isOpen
                           ? "bg-blue-600 text-white shadow-[0_4px_14px_rgba(59,130,246,0.3)]"
                           : "bg-blue-500/8 text-blue-600 dark:text-blue-300"
-                      }`}
+                        }`}
                     >
                       {String(i + 1).padStart(2, "0")}
                     </span>
@@ -980,9 +1001,8 @@ function FAQSection() {
                     <motion.div
                       animate={{ rotate: isOpen ? 180 : 0 }}
                       transition={{ duration: 0.3, ease: "easeInOut" }}
-                      className={`shrink-0 transition-colors duration-300 ${
-                        isOpen ? "text-blue-600 dark:text-blue-400" : "text-slate-300 dark:text-white/20"
-                      }`}
+                      className={`shrink-0 transition-colors duration-300 ${isOpen ? "text-blue-600 dark:text-blue-400" : "text-slate-300 dark:text-white/20"
+                        }`}
                     >
                       <FaChevronDown size={11} />
                     </motion.div>
@@ -1015,6 +1035,7 @@ function FAQSection() {
 }
 
 
+// Final call-to-action banner with custom background shapes and particle grid
 function CTASection() {
   return (
     <section className="relative px-6 pb-28 ">
@@ -1155,8 +1176,8 @@ function CTASection() {
 
             <div className="flex flex-wrap items-center justify-center gap-10">
               {[
-                { value: "500+", label: "Businesses" },
-                { value: "10k+", label: "Reviews" },
+                { value: "50+", label: "Businesses" },
+                { value: "1k+", label: "Reviews" },
                 { value: "100%", label: "Free" },
               ].map((stat, i) => (
                 <motion.div
@@ -1182,191 +1203,17 @@ function CTASection() {
   );
 }
 
-function Footer() {
-  return (
-    <footer className="relative overflow-hidden pt-10 border-t border-blue-500/10 bg-white text-slate-900 transition-colors duration-300 dark:border-white/10 dark:bg-[#081120] dark:text-white">
-
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1.2, ease: "easeOut" }}
-        className="pointer-events-none absolute inset-0 z-0 flex items-end justify-center overflow-hidden"
-      >
-        <motion.h1
-          animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-          className="translate-y-8 select-none font-[var(--font-outfit)] text-[22vw] font-bold leading-[0.75] tracking-[-0.04em]"
-          style={{
-            backgroundImage: "linear-gradient(90deg, rgba(59,130,246,0.07) 0%, rgba(147,197,253,0.13) 40%, rgba(59,130,246,0.07) 70%, rgba(59,130,246,0.03) 100%)",
-            backgroundSize: "200% 100%",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
-          }}
-        >
-          VICINITY
-        </motion.h1>
-      </motion.div>
-
-      <div className="pointer-events-none absolute inset-0 z-0">
-        <motion.div
-          animate={{ scale: [1, 1.15, 1], opacity: [0.04, 0.08, 0.04] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute -left-40 -top-40 h-[500px] w-[500px] rounded-full bg-blue-500 blur-[120px]"
-        />
-        <motion.div
-          animate={{ scale: [1, 1.2, 1], opacity: [0.03, 0.07, 0.03] }}
-          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-          className="absolute -right-40 top-20 h-[400px] w-[400px] rounded-full bg-blue-400 blur-[100px]"
-        />
-      </div>
-
-      <div className="relative z-10 mx-auto max-w-7xl px-6">
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-4 lg:gap-8 ">
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="flex flex-col"
-          >
-            <div className="mb-6"><VicinityLogo /></div>
-            <p className="mb-8 text-sm text-slate-500 dark:text-slate-400 max-w-xs leading-relaxed">
-              {UI_SETTINGS.siteDescription}
-            </p>
-            <div className="flex gap-3">
-              {[
-                { icon: <FaTwitter />, label: "Twitter" },
-                { icon: <FaInstagram />, label: "Instagram" },
-                { icon: <FaLinkedin />, label: "LinkedIn" },
-              ].map(({ icon, label }) => (
-                <motion.a
-                  key={label}
-                  href="#"
-                  aria-label={label}
-                  whileHover={{ y: -3, scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="flex h-9 w-9 items-center justify-center rounded-xl border border-blue-500/10 bg-blue-500/5 text-slate-400 transition-colors hover:border-blue-500/30 hover:bg-blue-500/10 hover:text-blue-500 dark:text-slate-500 dark:hover:text-blue-300"
-                >
-                  {icon}
-                </motion.a>
-              ))}
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.08 }}
-          >
-            <h4 className="mb-6 font-semibold text-slate-900 dark:text-white">Navigation</h4>
-            <ul className="space-y-3 text-sm text-slate-500 dark:text-slate-400">
-              {LANDING_NAV_ITEMS.map((item, i) => (
-                <motion.li
-                  key={item.name}
-                  initial={{ opacity: 0, x: -8 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.35, delay: 0.1 + i * 0.05 }}
-                >
-                  <a href={item.href} className="group inline-flex items-center gap-1.5 transition-colors hover:text-blue-600 dark:hover:text-blue-300">
-                    <span className="h-px w-0 bg-blue-500 transition-all duration-300 group-hover:w-3" />
-                    {item.name}
-                  </a>
-                </motion.li>
-              ))}
-            </ul>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.16 }}
-          >
-            <h4 className="mb-6 font-semibold text-slate-900 dark:text-white">Company</h4>
-            <ul className="space-y-3 text-sm text-slate-500 dark:text-slate-400">
-              {FOOTER_LINKS.company.map((item, i) => (
-                <motion.li
-                  key={item.name}
-                  initial={{ opacity: 0, x: -8 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.35, delay: 0.18 + i * 0.05 }}
-                >
-                  <a href={item.href} className="group inline-flex items-center gap-1.5 transition-colors hover:text-blue-600 dark:hover:text-blue-300">
-                    <span className="h-px w-0 bg-blue-500 transition-all duration-300 group-hover:w-3" />
-                    {item.name}
-                  </a>
-                </motion.li>
-              ))}
-            </ul>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.24 }}
-          >
-            <h4 className="mb-6 font-semibold text-slate-900 dark:text-white">Legal</h4>
-            <ul className="space-y-3 text-sm text-slate-500 dark:text-slate-400">
-              {FOOTER_LINKS.legal.map((item, i) => (
-                <motion.li
-                  key={item.name}
-                  initial={{ opacity: 0, x: -8 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.35, delay: 0.26 + i * 0.05 }}
-                >
-                  <a href={item.href} className="group inline-flex items-center gap-1.5 transition-colors hover:text-blue-600 dark:hover:text-blue-300">
-                    <span className="h-px w-0 bg-blue-500 transition-all duration-300 group-hover:w-3" />
-                    {item.name}
-                  </a>
-                </motion.li>
-              ))}
-            </ul>
-          </motion.div>
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="flex flex-col items-center justify-center pb-16 text-center text-sm font-medium text-slate-500 dark:text-slate-400"
-        >
-          <p className="flex items-center gap-1.5">
-            Made with
-            <motion.span
-              animate={{ scale: [1, 1.3, 1] }}
-              transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }}
-              className="text-blue-500"
-            >
-              <FaHeart className="text-xs" />
-            </motion.span>
-            by Vicinity Team
-          </p>
-          <p className="mt-1 text-xs font-normal opacity-60">{UI_SETTINGS.copyright}</p>
-        </motion.div>
-      </div>
-
-    </footer>
-  );
-}
-
-
+// Main landing page entry point coordinating accessibility and theme styling
 export default function LandingPage() {
   const [isAdhd, setIsAdhd] = useState(false);
 
+  // Monitor document class changes to dynamically disable animations for ADHD or reduced-motion users
   useEffect(() => {
     const checkAdhd = () => {
       setIsAdhd(document.documentElement.classList.contains('a11y-adhd'));
     };
     checkAdhd();
+    // Observe class list changes on the html root node to respond to accessibility toggle events
     const observer = new MutationObserver(checkAdhd);
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
     return () => observer.disconnect();

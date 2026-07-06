@@ -2,7 +2,7 @@
 
 
 // User dashboard (browse) page for discovering and filtering local businesses.
-// Features category-based filtering, AI search, grid/list views, and favorites management.
+// Features category-based filtering, AI search, grid/list views, and favorites management
 
 import React, { useState, useEffect, useMemo, useRef } from 'react'
 import { useRouter } from 'next/navigation'
@@ -697,7 +697,7 @@ export default function UserDashboardPage() {
             {[
               { label: 'Places', value: stats.total, delay: 0.1 },
               { label: 'Reviews', value: stats.totalReviews, delay: 0.2 },
-              { label: 'Avg Rating', value: stats.avgRating, delay: 0.3, star: true },
+              { label: 'Avg Rating', value: stats.avgRating, delay: 0.3, star: false },
               { label: 'Saved', value: stats.saved, delay: 0.4 },
             ].map(({ label, value, delay, star }) => (
               <motion.div
